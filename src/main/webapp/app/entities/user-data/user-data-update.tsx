@@ -81,7 +81,6 @@ export const UserDataUpdate = (props: RouteComponentProps<{ id: string }>) => {
               {!isNew ? <ValidatedField name="id" required readOnly id="user-data-id" label="ID" validate={{ required: true }} /> : null}
               <ValidatedField label="Rf Id" id="user-data-rfId" name="rfId" data-cy="rfId" type="text" />
               <ValidatedField label="Restricted" id="user-data-restricted" name="restricted" data-cy="restricted" check type="checkbox" />
-              <ValidatedField label="Count" id="user-data-count" name="count" data-cy="count" type="text" />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/user-data" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

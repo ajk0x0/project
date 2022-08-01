@@ -26,7 +26,7 @@ public class UserData implements Serializable {
     private Boolean restricted;
 
     @Column(name = "count")
-    private Integer count;
+    private Integer count = 0;
 
     @Column(name = "updated_at")
     private ZonedDateTime updatedAt;

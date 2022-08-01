@@ -10,4 +10,5 @@ export interface IUserData {
 
 export const defaultValue: Readonly<IUserData> = {
   restricted: false,
+  count: 0
 };
