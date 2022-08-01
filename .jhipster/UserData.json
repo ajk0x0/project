@@ -1,0 +1,32 @@
+{
+  "applications": "*",
+  "changelogDate": "20220801162633",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "user_data",
+  "fields": [
+    {
+      "fieldName": "rfId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "restricted",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "count",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "updatedAt",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "UserData",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}
