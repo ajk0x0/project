@@ -1,7 +1,7 @@
 import './home.scss';
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
 import { Row, Col, Alert } from 'reactstrap';
 
@@ -9,6 +9,11 @@ import { useAppSelector } from 'app/config/store';
 
 export const Home = () => {
   const account = useAppSelector(state => state.authentication.account);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (account?.login) history.replace("/user-data")
+  }, [account?.login])
 
   return (
     <Row>

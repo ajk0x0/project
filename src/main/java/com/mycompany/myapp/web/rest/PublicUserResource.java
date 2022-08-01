@@ -1,7 +1,11 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.UserData;
+import com.mycompany.myapp.repository.UserDataRepository;
 import com.mycompany.myapp.service.UserService;
 import com.mycompany.myapp.service.dto.UserDTO;
+
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.Collections;
 import org.slf4j.Logger;
@@ -27,9 +31,11 @@ public class PublicUserResource {
     private final Logger log = LoggerFactory.getLogger(PublicUserResource.class);
 
     private final UserService userService;
+    private final UserDataRepository userDataRepository;
 
-    public PublicUserResource(UserService userService) {
+    public PublicUserResource(UserService userService, UserDataRepository userDataRepository) {
         this.userService = userService;
+        this.userDataRepository = userDataRepository;
     }
 
     /**
@@ -48,6 +54,30 @@ public class PublicUserResource {
         final Page<UserDTO> page = userService.getAllPublicUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/user-access")
+    public String getUserAllowed(@RequestParam String rfId) {
+        Optional<UserData> userDataOptional = userDataRepository.findByRfId(rfId);
+        if (userDataOptional.isEmpty()) return "REJECT";
+        UserData userData = userDataOptional.get();
+        if (!userData.getRestricted()) return "OK";
+
+        String timePeriod = System.getenv("TIME_PERIOD") == null ? "20" : System.getenv("TIME_PERIOD");
+        if (ZonedDateTime.now().minusSeconds(Integer.parseInt(timePeriod)).isAfter(userData.getUpdatedAt())) {
+            return "OK";
+        } else if (userData.getCount() == 2) {
+            return "REJECT";
+        } else return "OK";
+    }
+
+    @PostMapping("/user-access")
+    public ResponseEntity<?> setCount(@RequestParam String rfId) {
+        UserData userData = userDataRepository.findByRfId(rfId).get();
+        userData.setCount((userData.getCount() + 1) % 3);
+        if (userData.getCount() == 0) userData.setUpdatedAt(ZonedDateTime.now());
+        userDataRepository.save(userData);
+        return ResponseEntity.ok().build();
     }
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {
